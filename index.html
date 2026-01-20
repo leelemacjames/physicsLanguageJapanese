@@ -1,0 +1,1051 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>物理学の特殊な言語 - Physics Language</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            font-family: 'Yu Gothic', 'Meiryo', 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+        
+        h1 { color: #667eea; margin-bottom: 10px; text-align: center; }
+        .subtitle { text-align: center; color: #666; margin-bottom: 30px; font-size: 1.1em; }
+        
+        .tabs {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 30px;
+            border-bottom: 3px solid #667eea;
+            flex-wrap: wrap;
+        }
+        
+        .tab {
+            padding: 12px 20px;
+            background: #e9ecef;
+            border: none;
+            border-radius: 10px 10px 0 0;
+            cursor: pointer;
+            font-size: 0.95em;
+            font-weight: bold;
+            color: #666;
+            transition: all 0.3s;
+        }
+        
+        .tab:hover { background: #dee2e6; }
+        .tab.active { background: #667eea; color: white; }
+        
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
+        
+        .stage {
+            background: #f8f9fa;
+            padding: 25px;
+            border-radius: 15px;
+            margin-bottom: 25px;
+            border: 3px solid #667eea;
+        }
+        
+        .stage h2 { color: #667eea; margin-bottom: 20px; }
+        
+        .info-box {
+            background: #fff3cd;
+            border: 2px solid #ffc107;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        
+        .info-box h3 { color: #856404; margin-bottom: 10px; }
+        .info-box p { color: #856404; line-height: 1.8; margin-bottom: 10px; }
+        
+        .word-card {
+            background: white;
+            border: 3px solid #667eea;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 15px 0;
+            transition: transform 0.2s;
+        }
+        
+        .word-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3);
+        }
+        
+        .word-card h3 {
+            color: #667eea;
+            margin-bottom: 5px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .japanese {
+            color: #764ba2;
+            font-size: 1.1em;
+            font-weight: normal;
+        }
+        
+        .word-type {
+            display: inline-block;
+            padding: 5px 12px;
+            border-radius: 15px;
+            font-weight: bold;
+            font-size: 0.85em;
+            margin-bottom: 10px;
+        }
+        
+        .noun { background: #3b82f6; color: white; }
+        .verb { background: #ef4444; color: white; }
+        .adjective { background: #10b981; color: white; }
+        
+        .example {
+            background: #e7f3ff;
+            border-left: 4px solid #2196F3;
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 5px;
+        }
+        
+        .example strong {
+            color: #0d47a1;
+        }
+        
+        .example .jp-translation {
+            color: #555;
+            font-style: italic;
+            margin-top: 5px;
+            display: block;
+        }
+        
+        .cloze-section {
+            background: #f8f9fa;
+            padding: 25px;
+            border-radius: 15px;
+            margin: 20px 0;
+            border: 3px solid #667eea;
+        }
+        
+        .cloze-section h3 {
+            color: #667eea;
+            margin-bottom: 20px;
+        }
+        
+        .cloze-text {
+            font-size: 1.15em;
+            line-height: 2.5;
+            color: #333;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+        }
+        
+        .blank {
+            display: inline-block;
+            min-width: 100px;
+            padding: 5px 10px;
+            margin: 0 5px;
+            border-bottom: 2px solid #667eea;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: bold;
+            color: #667eea;
+            background: #f0f0f0;
+        }
+        
+        .blank:hover { background: #e0e0e0; }
+        .blank.revealed {
+            color: #155724;
+            background: #d4edda;
+            border-radius: 5px;
+        }
+        
+        .question-box {
+            background: #e7f3ff;
+            border: 3px solid #2196F3;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+        
+        .question-box h3 {
+            color: #0d47a1;
+            margin-bottom: 15px;
+        }
+        
+        .mcq-option {
+            padding: 12px;
+            margin: 10px 0;
+            background: #f8f9fa;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+            border: 2px solid transparent;
+        }
+        
+        .mcq-option:hover {
+            background: #e9ecef;
+            border-color: #667eea;
+        }
+        
+        .mcq-option.selected {
+            background: #e7f3ff;
+            border-color: #2196F3;
+        }
+        
+        .mcq-option.correct {
+            background: #d4edda;
+            border-color: #28a745;
+        }
+        
+        .mcq-option.incorrect {
+            background: #f8d7da;
+            border-color: #dc3545;
+        }
+        
+        .feedback {
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+            font-weight: bold;
+            display: none;
+        }
+        
+        .feedback.correct {
+            background: #d4edda;
+            color: #155724;
+            border: 2px solid #28a745;
+        }
+        
+        .feedback.incorrect {
+            background: #f8d7da;
+            color: #721c24;
+            border: 2px solid #dc3545;
+        }
+        
+        button {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 8px;
+            font-size: 1em;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background 0.3s;
+            margin: 10px 5px;
+        }
+        
+        button:hover { background: #5568d3; }
+        
+        .grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+        
+        @media (max-width: 768px) {
+            .grid-2 {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        .highlight {
+            background: #fff3cd;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-weight: bold;
+            color: #856404;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>📚 物理学の特殊な言語 / The Peculiar Language of Physics</h1>
+        <p class="subtitle">日常語と専門用語の違い / Differences between everyday and technical language</p>
+        
+        <div class="tabs">
+            <button class="tab active" onclick="showTab('intro')">はじめに / Introduction</button>
+            <button class="tab" onclick="showTab('nouns')">名詞 / Nouns</button>
+            <button class="tab" onclick="showTab('verbs')">動詞 / Verbs</button>
+            <button class="tab" onclick="showTab('adjectives')">形容詞 / Adjectives</button>
+            <button class="tab" onclick="showTab('cloze')">穴埋め / Cloze</button>
+            <button class="tab" onclick="showTab('questions')">問題 / Questions</button>
+        </div>
+        
+        <!-- INTRODUCTION TAB -->
+        <div id="intro" class="tab-content active">
+            <div class="stage">
+                <h2>🎭 物理学の言語が特殊な理由 / Why Physics Language is Peculiar</h2>
+                
+                <div class="info-box">
+                    <h3>日常語に精密な意味を与える / Everyday Words with Precise Meanings</h3>
+                    <p>物理学は日常言語から普通の単語を借用しますが、それに<strong>非常に具体的で専門的な意味</strong>を与えます。</p>
+                    <p>Physics borrows ordinary words from everyday language but gives them <strong>highly specific, technical meanings</strong>.</p>
+                    <p style="margin-top: 10px;">これは混乱を招く可能性があります！日常語の「流体」は「滑らか」や「流れる」を意味するかもしれませんが、物理学では液体と気体の両方を含む正確なカテゴリーです。</p>
+                </div>
+                
+                <div class="info-box" style="background: #e7f3ff; border-color: #2196F3;">
+                    <h3 style="color: #0d47a1;">物理学語彙の三つのカテゴリー / Three Categories</h3>
+                    <p style="color: #0d47a1;"><span class="noun">名詞 / NOUNS</span> - 物体と概念（円柱、容器、媒質、界面）</p>
+                    <p style="color: #0d47a1;"><span class="verb">動詞 / VERBS</span> - 行動と過程（衝突する、発生する、変換する、枯渇する）</p>
+                    <p style="color: #0d47a1;"><span class="adjective">形容詞 / ADJECTIVES</span> - 性質と状態（剛体、静的、弾性、非弾性）</p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- NOUNS TAB -->
+        <div id="nouns" class="tab-content">
+            <div class="stage">
+                <h2>📦 物理学の名詞 / Physics Nouns</h2>
+                
+                <div class="word-card">
+                    <span class="word-type noun">名詞 / NOUN</span>
+                    <h3>Cylinder <span class="japanese">円柱 (えんちゅう)</span></h3>
+                    <p><strong>定義 / Definition:</strong> 円形の断面と長さに沿って均一な直径を持つ幾何学的固体。</p>
+                    <p>A geometric solid with circular cross-section and uniform diameter along its length.</p>
+                    <div class="example">
+                        <strong>例文 1:</strong> A <span class="highlight">cylinder</span> of mass 2 kg and radius 0.1 m rolls down an incline.
+                        <span class="jp-translation">質量2kg、半径0.1mの<span class="highlight">円柱</span>が斜面を転がり落ちる。</span>
+                    </div>
+                    <div class="example">
+                        <strong>例文 2:</strong> The piston moves inside a <span class="highlight">cylindrical</span> chamber compressing the gas.
+                        <span class="jp-translation">ピストンが<span class="highlight">円筒形</span>の室内で動き、気体を圧縮する。</span>
+                    </div>
+                    <div class="example">
+                        <strong>例文 3:</strong> Calculate the moment of inertia of a solid <span class="highlight">cylinder</span> about its central axis.
+                        <span class="jp-translation">中心軸の周りの固体<span class="highlight">円柱</span>の慣性モーメントを計算せよ。</span>
+                    </div>
+                </div>
+                
+                <div class="word-card">
+                    <span class="word-type noun">名詞 / NOUN</span>
+                    <h3>Block <span class="japanese">ブロック / 物体 (ぶったい)</span></h3>
+                    <p><strong>定義 / Definition:</strong> 長方形の固体物体、力学問題でよく使われる簡略化されたモデル。</p>
+                    <p>A rectangular solid object, often used as a simplified model in mechanics problems.</p>
+                    <div class="example">
+                        <strong>例文 1:</strong> A <span class="highlight">block</span> of mass 5 kg rests on a frictionless surface.
+                        <span class="jp-translation">質量5kgの<span class="highlight">物体</span>が摩擦のない表面上に置かれている。</span>
+                    </div>
+                    <div class="example">
+                        <strong>例文 2:</strong> Two <span class="highlight">blocks</span> connected by a string pass over a pulley.
+                        <span class="jp-translation">紐でつながれた二つの<span class="highlight">物体</span>が滑車を通る。</span>
+                    </div>
+                </div>
+                
+                <div class="word-card">
+                    <span class="word-type noun">名詞 / NOUN</span>
+                    <h3>Vessel <span class="japanese">容器 (ようき)</span></h3>
+                    <p><strong>定義 / Definition:</strong> 流体（液体または気体）を保持するために設計された容器、しばしば圧力下にある。</p>
+                    <p>A container designed to hold fluids (liquids or gases), often under pressure.</p>
+                    <div class="example">
+                        <strong>例文 1:</strong> Gas is contained in a sealed <span class="highlight">vessel</span> at constant volume.
+                        <span class="jp-translation">気体は一定体積の密閉された<span class="highlight">容器</span>に収められている。</span>
+                    </div>
+                    <div class="example">
+                        <strong>例文 2:</strong> The pressure in the <span class="highlight">vessel</span> increases when temperature rises.
+                        <span class="jp-translation">温度が上昇すると<span class="highlight">容器</span>内の圧力が増加する。</span>
+                    </div>
+                </div>
+                
+                <div class="grid-2">
+                    <div class="word-card">
+                        <span class="word-type noun">名詞 / NOUN</span>
+                        <h3>Slope / Incline <span class="japanese">斜面 (しゃめん)</span></h3>
+                        <p><strong>定義:</strong> 水平に対して角度をつけて傾いた平面。</p>
+                        <p>A flat surface tilted at an angle to the horizontal.</p>
+                        <div class="example">A block slides down a <span class="highlight">slope</span> of angle 30°.
+                        <span class="jp-translation">物体が角度30°の<span class="highlight">斜面</span>を滑り落ちる。</span></div>
+                    </div>
+                    
+                    <div class="word-card">
+                        <span class="word-type noun">名詞 / NOUN</span>
+                        <h3>Coil <span class="japanese">コイル / 巻線 (かんせん)</span></h3>
+                        <p><strong>定義:</strong> らせん状に巻かれた導線、電磁気用途に使用される。</p>
+                        <p>A wire wound in a spiral or helix, used in electromagnetic applications.</p>
+                        <div class="example">The magnetic field inside a <span class="highlight">coil</span> is uniform.
+                        <span class="jp-translation"><span class="highlight">コイル</span>内の磁場は一様である。</span></div>
+                    </div>
+                </div>
+                
+                <div class="grid-2">
+                    <div class="word-card">
+                        <span class="word-type noun">名詞 / NOUN</span>
+                        <h3>Circuit <span class="japanese">回路 (かいろ)</span></h3>
+                        <p><strong>定義:</strong> 電流が流れることができる閉じたループ。</p>
+                        <p>A closed loop through which electric current can flow.</p>
+                        <div class="example">Calculate the total resistance in the <span class="highlight">circuit</span>.
+                        <span class="jp-translation"><span class="highlight">回路</span>の全抵抗を計算せよ。</span></div>
+                    </div>
+                    
+                    <div class="word-card">
+                        <span class="word-type noun">名詞 / NOUN</span>
+                        <h3>Medium <span class="japanese">媒質 (ばいしつ)</span></h3>
+                        <p><strong>定義:</strong> 波が伝播する、または物体が移動する物質。</p>
+                        <p>The substance through which waves propagate or objects move.</p>
+                        <div class="example">Light travels through the <span class="highlight">medium</span> at reduced speed.
+                        <span class="jp-translation">光は<span class="highlight">媒質</span>中を減速して進む。</span></div>
+                    </div>
+                </div>
+                
+                <div class="grid-2">
+                    <div class="word-card">
+                        <span class="word-type noun">名詞 / NOUN</span>
+                        <h3>Body <span class="japanese">物体 (ぶったい)</span></h3>
+                        <p><strong>定義:</strong> 質量を持つ任意の物体、特にその運動や作用する力を考える時。</p>
+                        <p>Any object with mass, especially when considering its motion or forces.</p>
+                        <div class="example">A <span class="highlight">body</span> in uniform circular motion experiences centripetal acceleration.
+                        <span class="jp-translation">等速円運動をする<span class="highlight">物体</span>は向心加速度を受ける。</span></div>
+                    </div>
+                    
+                    <div class="word-card">
+                        <span class="word-type noun">名詞 / NOUN</span>
+                        <h3>Interface <span class="japanese">界面 (かいめん)</span></h3>
+                        <p><strong>定義:</strong> 二つの異なる媒質または材料の境界面。</p>
+                        <p>The boundary surface between two different media or materials.</p>
+                        <div class="example">Refraction occurs at the <span class="highlight">interface</span> between air and water.
+                        <span class="jp-translation">屈折は空気と水の<span class="highlight">界面</span>で起こる。</span></div>
+                    </div>
+                </div>
+                
+                <div class="word-card">
+                    <span class="word-type noun">名詞 / NOUN</span>
+                    <h3>Fluid <span class="japanese">流体 (りゅうたい)</span></h3>
+                    <p><strong>定義:</strong> 流れて容器の形状をとる物質（液体または気体）。</p>
+                    <p>A substance (liquid or gas) that flows and takes the shape of its container.</p>
+                    <div class="example">
+                        <strong>例文 1:</strong> The <span class="highlight">fluid</span> exerts pressure on the walls of the container.
+                        <span class="jp-translation"><span class="highlight">流体</span>は容器の壁に圧力を及ぼす。</span>
+                    </div>
+                    <div class="example">
+                        <strong>例文 2:</strong> Both air and water are <span class="highlight">fluids</span> and obey Bernoulli's equation.
+                        <span class="jp-translation">空気と水はどちらも<span class="highlight">流体</span>であり、ベルヌーイの式に従う。</span>
+                    </div>
+                </div>
+                
+                <div class="grid-2">
+                    <div class="word-card">
+                        <span class="word-type noun">名詞 / NOUN</span>
+                        <h3>Arrow <span class="japanese">矢印 (やじるし)</span></h3>
+                        <p><strong>定義:</strong> 方向を示す記号または線；ベクトルの表現。</p>
+                        <p>A symbol or line indicating direction; representation of a vector.</p>
+                        <div class="example">The <span class="highlight">arrow</span> shows the direction of the force.
+                        <span class="jp-translation"><span class="highlight">矢印</span>が力の方向を示す。</span></div>
+                    </div>
+                    
+                    <div class="word-card">
+                        <span class="word-type noun">名詞 / NOUN</span>
+                        <h3>Moment <span class="japanese">モーメント / 力のモーメント</span></h3>
+                        <p><strong>定義:</strong> 回転効果を生じる力；トルク。</p>
+                        <p>The turning effect of a force; torque.</p>
+                        <div class="example">Calculate the <span class="highlight">moment</span> about the pivot.
+                        <span class="jp-translation">支点の周りの<span class="highlight">モーメント</span>を計算せよ。</span></div>
+                    </div>
+                </div>
+                
+                <div class="grid-2">
+                    <div class="word-card">
+                        <span class="word-type noun">名詞 / NOUN</span>
+                        <h3>Interval <span class="japanese">間隔 (かんかく)</span></h3>
+                        <p><strong>定義:</strong> 二つの点、時間、または事象の間の距離または時間。</p>
+                        <p>The distance or time between two points, times, or events.</p>
+                        <div class="example">Measure the time <span class="highlight">interval</span> between pulses.
+                        <span class="jp-translation">パルス間の時間<span class="highlight">間隔</span>を測定せよ。</span></div>
+                    </div>
+                    
+                    <div class="word-card">
+                        <span class="word-type noun">名詞 / NOUN</span>
+                        <h3>Period <span class="japanese">周期 (しゅうき)</span></h3>
+                        <p><strong>定義:</strong> 繰り返し運動の一サイクルにかかる時間。</p>
+                        <p>The time taken for one complete cycle of a repeating motion.</p>
+                        <div class="example">The <span class="highlight">period</span> of oscillation is 2 seconds.
+                        <span class="jp-translation">振動の<span class="highlight">周期</span>は2秒である。</span></div>
+                    </div>
+                </div>
+                
+                <div class="word-card">
+                    <span class="word-type noun">名詞 / NOUN</span>
+                    <h3>Pivot <span class="japanese">支点 (してん) / 回転軸</span></h3>
+                    <p><strong>定義:</strong> 物体が回転する点または軸。</p>
+                    <p>The point or axis about which something rotates.</p>
+                    <div class="example">
+                        <strong>例文 1:</strong> The lever rotates about the <span class="highlight">pivot</span>.
+                        <span class="jp-translation">てこが<span class="highlight">支点</span>の周りを回転する。</span>
+                    </div>
+                    <div class="example">
+                        <strong>例文 2:</strong> Place the <span class="highlight">pivot</span> at the center of mass for balance.
+                        <span class="jp-translation">バランスを取るため<span class="highlight">支点</span>を重心に置く。</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- VERBS TAB -->
+        <div id="verbs" class="tab-content">
+            <div class="stage">
+                <h2>⚡ 物理学の動詞 / Physics Verbs</h2>
+                
+                <div class="word-card">
+                    <span class="word-type verb">動詞 / VERB</span>
+                    <h3>Strike <span class="japanese">打つ (うつ) / 衝突する</span></h3>
+                    <p><strong>定義:</strong> 力を持って打つまたは接触する（衝撃を伴うことを示す）。</p>
+                    <p>To hit or make contact with (implies impact with force).</p>
+                    <div class="example">
+                        <strong>例文 1:</strong> The hammer <span class="highlight">strikes</span> the nail with a force of 100 N.
+                        <span class="jp-translation">ハンマーが100Nの力で釘を<span class="highlight">打つ</span>。</span>
+                    </div>
+                    <div class="example">
+                        <strong>例文 2:</strong> Light <span class="highlight">strikes</span> the surface at an incident angle of 45°.
+                        <span class="jp-translation">光が45°の入射角で表面に<span class="highlight">当たる</span>。</span>
+                    </div>
+                </div>
+                
+                <div class="word-card">
+                    <span class="word-type verb">動詞 / VERB</span>
+                    <h3>Collide <span class="japanese">衝突する (しょうとつする)</span></h3>
+                    <p><strong>定義:</strong> 力を持って一緒になる；互いに衝突する。</p>
+                    <p>To come together with force; to crash into each other.</p>
+                    <div class="example">
+                        <strong>例文 1:</strong> Two carts <span class="highlight">collide</span> elastically on a frictionless track.
+                        <span class="jp-translation">二台の台車が摩擦のない軌道上で弾性的に<span class="highlight">衝突する</span>。</span>
+                    </div>
+                    <div class="example">
+                        <strong>例文 2:</strong> Gas molecules <span class="highlight">collide</span> with the walls of the container.
+                        <span class="jp-translation">気体分子が容器の壁に<span class="highlight">衝突する</span>。</span>
+                    </div>
+                </div>
+                
+                <div class="word-card">
+                    <span class="word-type verb">動詞 / VERB</span>
+                    <h3>Generate <span class="japanese">発生する (はっせいする) / 生成する</span></h3>
+                    <p><strong>定義:</strong> 生産または創造する（エネルギー、場、波など）。</p>
+                    <p>To produce or create (energy, fields, waves, etc.).</p>
+                    <div class="example">
+                        <strong>例文 1:</strong> The dynamo <span class="highlight">generates</span> an emf of 12 volts.
+                        <span class="jp-translation">発電機が12ボルトの起電力を<span class="highlight">発生させる</span>。</span>
+                    </div>
+                    <div class="example">
+                        <strong>例文 2:</strong> Moving charges <span class="highlight">generate</span> magnetic fields.
+                        <span class="jp-translation">動く電荷が磁場を<span class="highlight">生成する</span>。</span>
+                    </div>
+                </div>
+                
+                <div class="grid-2">
+                    <div class="word-card">
+                        <span class="word-type verb">動詞 / VERB</span>
+                        <h3>Deplete <span class="japanese">枯渇する (こかつする) / 消耗する</span></h3>
+                        <p><strong>定義:</strong> 供給を減らすまたは使い果たす（エネルギー、電荷、資源）。</p>
+                        <p>To reduce or exhaust a supply.</p>
+                        <div class="example">The battery <span class="highlight">depletes</span> its charge over time.
+                        <span class="jp-translation">電池は時間とともに電荷を<span class="highlight">消耗する</span>。</span></div>
+                    </div>
+                    
+                    <div class="word-card">
+                        <span class="word-type verb">動詞 / VERB</span>
+                        <h3>Transform <span class="japanese">変換する (へんかんする)</span></h3>
+                        <p><strong>定義:</strong> ある形から別の形に変わる（特にエネルギー）。</p>
+                        <p>To change from one form to another (especially energy).</p>
+                        <div class="example">Kinetic energy <span class="highlight">transforms</span> into heat energy.
+                        <span class="jp-translation">運動エネルギーが熱エネルギーに<span class="highlight">変換される</span>。</span></div>
+                    </div>
+                </div>
+                
+                <div class="grid-2">
+                    <div class="word-card">
+                        <span class="word-type verb">動詞 / VERB</span>
+                        <h3>Translate <span class="japanese">並進する (へいしんする)</span></h3>
+                        <p><strong>定義:</strong> 回転なしに直線的に移動する。</p>
+                        <p>To move in a straight line without rotation.</p>
+                        <div class="example">The block <span class="highlight">translates</span> along the x-axis at constant velocity.
+                        <span class="jp-translation">物体が一定速度でx軸に沿って<span class="highlight">並進する</span>。</span></div>
+                    </div>
+                    
+                    <div class="word-card">
+                        <span class="word-type verb">動詞 / VERB</span>
+                        <h3>Propagate <span class="japanese">伝播する (でんぱする)</span></h3>
+                        <p><strong>定義:</strong> 媒質を通って移動または広がる（波、擾乱）。</p>
+                        <p>To travel or spread through a medium.</p>
+                        <div class="example">Sound waves <span class="highlight">propagate</span> through air at 340 m/s.
+                        <span class="jp-translation">音波が空気中を340m/sで<span class="highlight">伝播する</span>。</span></div>
+                    </div>
+                </div>
+                
+                <div class="grid-2">
+                    <div class="word-card">
+                        <span class="word-type verb">動詞 / VERB</span>
+                        <h3>Radiate <span class="japanese">放射する (ほうしゃする)</span></h3>
+                        <p><strong>定義:</strong> 波または粒子の形でエネルギーを放出する。</p>
+                        <p>To emit energy in the form of waves or particles.</p>
+                        <div class="example">The hot object <span class="highlight">radiates</span> thermal energy.
+                        <span class="jp-translation">高温の物体が熱エネルギーを<span class="highlight">放射する</span>。</span></div>
+                    </div>
+                    
+                    <div class="word-card">
+                        <span class="word-type verb">動詞 / VERB</span>
+                        <h3>Accelerate <span class="japanese">加速する (かそくする)</span></h3>
+                        <p><strong>定義:</strong> 速度を変える（速さまたは方向）。</p>
+                        <p>To change velocity (speed or direction).</p>
+                        <div class="example">The car <span class="highlight">accelerates</span> from rest at 2 m/s².
+                        <span class="jp-translation">車が静止状態から2m/s²で<span class="highlight">加速する</span>。</span></div>
+                    </div>
+                </div>
+                
+                <div class="grid-2">
+                    <div class="word-card">
+                        <span class="word-type verb">動詞 / VERB</span>
+                        <h3>Slide / Slides <span class="japanese">滑る (すべる)</span></h3>
+                        <p><strong>定義:</strong> 表面に沿って滑らかに動く。</p>
+                        <p>To move smoothly along a surface.</p>
+                        <div class="example">The block <span class="highlight">slides</span> down the frictionless incline.
+                        <span class="jp-translation">物体が摩擦のない斜面を<span class="highlight">滑り</span>落ちる。</span></div>
+                    </div>
+                    
+                    <div class="word-card">
+                        <span class="word-type verb">動詞 / VERB</span>
+                        <h3>Pivot / Pivots <span class="japanese">回転する (かいてんする) / 旋回する</span></h3>
+                        <p><strong>定義:</strong> 固定点を中心に回転する。</p>
+                        <p>To rotate about a fixed point.</p>
+                        <div class="example">The rod <span class="highlight">pivots</span> about its end.
+                        <span class="jp-translation">棒が端を中心に<span class="highlight">回転する</span>。</span></div>
+                    </div>
+                </div>
+                
+                <div class="grid-2">
+                    <div class="word-card">
+                        <span class="word-type verb">動詞 / VERB</span>
+                        <h3>Topple / Topples <span class="japanese">倒れる (たおれる) / 転倒する</span></h3>
+                        <p><strong>定義:</strong> バランスを失って倒れる。</p>
+                        <p>To lose balance and fall over.</p>
+                        <div class="example">The tower <span class="highlight">topples</span> when the center of gravity is outside the base.
+                        <span class="jp-translation">重心が底面の外にあるとき、塔が<span class="highlight">倒れる</span>。</span></div>
+                    </div>
+                    
+                    <div class="word-card">
+                        <span class="word-type verb">動詞 / VERB</span>
+                        <h3>Fall / Falls <span class="japanese">落ちる (おちる) / 落下する</span></h3>
+                        <p><strong>定義:</strong> 重力の作用で下方に動く。</p>
+                        <p>To move downward under the force of gravity.</p>
+                        <div class="example">The object <span class="highlight">falls</span> freely with acceleration g.
+                        <span class="jp-translation">物体が加速度gで自由に<span class="highlight">落下する</span>。</span></div>
+                    </div>
+                </div>
+                
+                <div class="word-card">
+                    <span class="word-type verb">動詞 / VERB</span>
+                    <h3>Point / Points <span class="japanese">指す (さす) / 向く</span></h3>
+                    <p><strong>定義:</strong> 特定の方向を向いている；方向を示す。</p>
+                    <p>To be directed toward; to indicate direction.</p>
+                    <div class="example">
+                        <strong>例文 1:</strong> The vector <span class="highlight">points</span> in the positive x-direction.
+                        <span class="jp-translation">ベクトルが正のx方向を<span class="highlight">向いている</span>。</span>
+                    </div>
+                    <div class="example">
+                        <strong>例文 2:</strong> The compass needle <span class="highlight">points</span> north.
+                        <span class="jp-translation">コンパスの針が北を<span class="highlight">指す</span>。</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- ADJECTIVES TAB -->
+        <div id="adjectives" class="tab-content">
+            <div class="stage">
+                <h2>✨ 物理学の形容詞 / Physics Adjectives</h2>
+                
+                <div class="word-card">
+                    <span class="word-type adjective">形容詞 / ADJECTIVE</span>
+                    <h3>Rigid <span class="japanese">剛体の (ごうたいの) / 変形しない</span></h3>
+                    <p><strong>定義:</strong> 変形または曲がることができない；固定された形状と体積を維持する。</p>
+                    <p>Not able to deform or bend; maintaining fixed shape and volume.</p>
+                    <div class="example">
+                        <strong>例文 1:</strong> A <span class="highlight">rigid</span> body rotates without changing its shape.
+                        <span class="jp-translation"><span class="highlight">剛体</span>は形を変えずに回転する。</span>
+                    </div>
+                    <div class="example">
+                        <strong>例文 2:</strong> The rod is assumed to be perfectly <span class="highlight">rigid</span> (no bending).
+                        <span class="jp-translation">棒は完全に<span class="highlight">剛体</span>であると仮定される（曲がらない）。</span>
+                    </div>
+                </div>
+                
+                <div class="word-card">
+                    <span class="word-type adjective">形容詞 / ADJECTIVE</span>
+                    <h3>Elastic <span class="japanese">弾性の (だんせいの)</span></h3>
+                    <p><strong>定義:</strong> 変形して元の形に戻ることができる；変形時にエネルギーを蓄える。</p>
+                    <p>Able to deform and return to original shape; stores energy when deformed.</p>
+                    <div class="example">
+                        <strong>例文 1:</strong> An <span class="highlight">elastic</span> collision conserves kinetic energy.
+                        <span class="jp-translation"><span class="highlight">弾性</span>衝突では運動エネルギーが保存される。</span>
+                    </div>
+                    <div class="example">
+                        <strong>例文 2:</strong> The spring is perfectly <span class="highlight">elastic</span> and obeys Hooke's law.
+                        <span class="jp-translation">ばねは完全に<span class="highlight">弾性</span>でありフックの法則に従う。</span>
+                    </div>
+                </div>
+                
+                <div class="word-card">
+                    <span class="word-type adjective">形容詞 / ADJECTIVE</span>
+                    <h3>Static <span class="japanese">静的な (せいてきな) / 静止の</span></h3>
+                    <p><strong>定義:</strong> 動いていない；静止している；または平衡状態の力に関する。</p>
+                    <p>Not moving; at rest; or relating to forces in equilibrium.</p>
+                    <div class="example">
+                        <strong>例文 1:</strong> <span class="highlight">Static</span> friction prevents the block from sliding.
+                        <span class="jp-translation"><span class="highlight">静止</span>摩擦が物体の滑りを防ぐ。</span>
+                    </div>
+                    <div class="example">
+                        <strong>例文 2:</strong> The system is in <span class="highlight">static</span> equilibrium when all forces balance.
+                        <span class="jp-translation">すべての力が釣り合うとき、系は<span class="highlight">静的</span>平衡にある。</span>
+                    </div>
+                </div>
+                
+                <div class="grid-2">
+                    <div class="word-card">
+                        <span class="word-type adjective">形容詞 / ADJECTIVE</span>
+                        <h3>Stationary <span class="japanese">静止した (せいしした)</span></h3>
+                        <p><strong>定義:</strong> 動いていない；静止している（物体を表す、力ではない）。</p>
+                        <p>Not moving; at rest (describes objects, not forces).</p>
+                        <div class="example">The observer is <span class="highlight">stationary</span> while the wave passes.
+                        <span class="jp-translation">波が通過する間、観測者は<span class="highlight">静止</span>している。</span></div>
+                    </div>
+                    
+                    <div class="word-card">
+                        <span class="word-type adjective">形容詞 / ADJECTIVE</span>
+                        <h3>Uniform <span class="japanese">一様な (いちような)</span></h3>
+                        <p><strong>定義:</strong> 一定の；位置または時間で変化しない。</p>
+                        <p>Constant; not changing with position or time.</p>
+                        <div class="example">The object moves with <span class="highlight">uniform</span> velocity.
+                        <span class="jp-translation">物体は<span class="highlight">一定</span>速度で動く。</span></div>
+                    </div>
+                </div>
+                
+                <div class="grid-2">
+                    <div class="word-card">
+                        <span class="word-type adjective">形容詞 / ADJECTIVE</span>
+                        <h3>Inelastic <span class="japanese">非弾性の (ひだんせいの)</span></h3>
+                        <p><strong>定義:</strong> 元の形に戻らない；衝突で運動エネルギーを失う。</p>
+                        <p>Not returning to original shape; losing kinetic energy in collisions.</p>
+                        <div class="example">In an <span class="highlight">inelastic</span> collision, the objects stick together.
+                        <span class="jp-translation"><span class="highlight">非弾性</span>衝突では、物体がくっつく。</span></div>
+                    </div>
+                    
+                    <div class="word-card">
+                        <span class="word-type adjective">形容詞 / ADJECTIVE</span>
+                        <h3>Frictionless <span class="japanese">摩擦のない (まさつのない)</span></h3>
+                        <p><strong>定義:</strong> 摩擦がない；理想化された条件。</p>
+                        <p>Having no friction; an idealized condition.</p>
+                        <div class="example">The surface is assumed to be <span class="highlight">frictionless</span>.
+                        <span class="jp-translation">表面は<span class="highlight">摩擦がない</span>と仮定される。</span></div>
+                    </div>
+                </div>
+                
+                <div class="grid-2">
+                    <div class="word-card">
+                        <span class="word-type adjective">形容詞 / ADJECTIVE</span>
+                        <h3>Ideal <span class="japanese">理想的な (りそうてきな)</span></h3>
+                        <p><strong>定義:</strong> 完璧な；理論的な；現実世界の不完全さがない。</p>
+                        <p>Perfect; theoretical; without real-world imperfections.</p>
+                        <div class="example">An <span class="highlight">ideal</span> gas obeys PV = nRT exactly.
+                        <span class="jp-translation"><span class="highlight">理想</span>気体はPV=nRTに正確に従う。</span></div>
+                    </div>
+                    
+                    <div class="word-card">
+                        <span class="word-type adjective">形容詞 / ADJECTIVE</span>
+                        <h3>Isolated <span class="japanese">孤立した (こりつした)</span></h3>
+                        <p><strong>定義:</strong> 外部の相互作用から切り離された；周囲との交換がない。</p>
+                        <p>Cut off from external interactions; no exchange with surroundings.</p>
+                        <div class="example">In an <span class="highlight">isolated</span> system, total momentum is conserved.
+                        <span class="jp-translation"><span class="highlight">孤立</span>系では全運動量が保存される。</span></div>
+                    </div>
+                </div>
+                
+                <div class="grid-2">
+                    <div class="word-card">
+                        <span class="word-type adjective">形容詞 / ADJECTIVE</span>
+                        <h3>Coherent <span class="japanese">コヒーレントな / 干渉性の</span></h3>
+                        <p><strong>定義:</strong> 固定された位相関係を持つ（波、光源）。</p>
+                        <p>Having a fixed phase relationship (waves, light sources).</p>
+                        <div class="example"><span class="highlight">Coherent</span> light sources produce stable interference.
+                        <span class="jp-translation"><span class="highlight">コヒーレント</span>な光源は安定した干渉を生じる。</span></div>
+                    </div>
+                    
+                    <div class="word-card">
+                        <span class="word-type adjective">形容詞 / ADJECTIVE</span>
+                        <h3>Viscous <span class="japanese">粘性の (ねんせいの)</span></h3>
+                        <p><strong>定義:</strong> 流れに対する高い抵抗を持つ（濃い流体）。</p>
+                        <p>Having high resistance to flow (thick fluids).</p>
+                        <div class="example">Honey is more <span class="highlight">viscous</span> than water.
+                        <span class="jp-translation">蜂蜜は水より<span class="highlight">粘性</span>が高い。</span></div>
+                    </div>
+                </div>
+                
+                <div class="grid-2">
+                    <div class="word-card">
+                        <span class="word-type adjective">形容詞 / ADJECTIVE</span>
+                        <h3>Clockwise <span class="japanese">時計回りの (とけいまわりの)</span></h3>
+                        <p><strong>定義:</strong> 時計の針が回る方向に。</p>
+                        <p>In the direction that clock hands move.</p>
+                        <div class="example">The wheel rotates in a <span class="highlight">clockwise</span> direction.
+                        <span class="jp-translation">車輪が<span class="highlight">時計回り</span>の方向に回転する。</span></div>
+                    </div>
+                    
+                    <div class="word-card">
+                        <span class="word-type adjective">形容詞 / ADJECTIVE</span>
+                        <h3>Turning <span class="japanese">回転する / 旋回する</span></h3>
+                        <p><strong>定義:</strong> 回転運動をしている；方向を変えている。</p>
+                        <p>Rotating; changing direction.</p>
+                        <div class="example">The <span class="highlight">turning</span> effect is measured by the moment.
+                        <span class="jp-translation"><span class="highlight">回転</span>効果はモーメントで測定される。</span></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- CLOZE ACTIVITIES TAB -->
+        <div id="cloze" class="tab-content">
+            <div class="stage">
+                <h2>📝 穴埋め問題 / Cloze Activities</h2>
+                
+                <div class="cloze-section">
+                    <h3>活動 1: 力学 / Activity 1: Mechanics</h3>
+                    <div class="cloze-text">
+                        A <span class="blank" onclick="revealBlank(this)" data-answer="rigid">______</span> <span class="blank" onclick="revealBlank(this)" data-answer="cylinder">______</span> 
+                        of mass 5 kg rolls down a smooth <span class="blank" onclick="revealBlank(this)" data-answer="slope">______</span> without slipping. 
+                        When it reaches the bottom, it <span class="blank" onclick="revealBlank(this)" data-answer="collides">______</span> with a 
+                        <span class="blank" onclick="revealBlank(this)" data-answer="stationary">______</span> <span class="blank" onclick="revealBlank(this)" data-answer="block">______</span>.<br>
+                        <span style="color: #666;">質量5kgの<span class="blank" onclick="revealBlank(this)" data-answer="剛体">______</span><span class="blank" onclick="revealBlank(this)" data-answer="円柱">______</span>が
+                        滑らかな<span class="blank" onclick="revealBlank(this)" data-answer="斜面">______</span>を滑らずに転がり落ちる。底に達すると、<span class="blank" onclick="revealBlank(this)" data-answer="静止">______</span>した
+                        <span class="blank" onclick="revealBlank(this)" data-answer="物体">______</span>と<span class="blank" onclick="revealBlank(this)" data-answer="衝突する">______</span>。</span>
+                    </div>
+                    <button onclick="revealAllBlanks()">すべて表示 / Reveal All</button>
+                    <button onclick="resetBlanks()">リセット / Reset</button>
+                </div>
+                
+                <div class="cloze-section">
+                    <h3>活動 2: 熱力学 / Activity 2: Thermodynamics</h3>
+                    <div class="cloze-text">
+                        An <span class="blank" onclick="revealBlank(this)" data-answer="ideal">______</span> gas is contained in a sealed 
+                        <span class="blank" onclick="revealBlank(this)" data-answer="vessel">______</span> at constant volume. The 
+                        <span class="blank" onclick="revealBlank(this)" data-answer="fluid">______</span> molecules 
+                        <span class="blank" onclick="revealBlank(this)" data-answer="collide">______</span> with the walls.<br>
+                        <span style="color: #666;"><span class="blank" onclick="revealBlank(this)" data-answer="理想">______</span>気体が一定体積の密閉された
+                        <span class="blank" onclick="revealBlank(this)" data-answer="容器">______</span>に収められている。
+                        <span class="blank" onclick="revealBlank(this)" data-answer="流体">______</span>分子が壁に<span class="blank" onclick="revealBlank(this)" data-answer="衝突する">______</span>。</span>
+                    </div>
+                    <button onclick="revealAllBlanks()">すべて表示 / Reveal All</button>
+                    <button onclick="resetBlanks()">リセット / Reset</button>
+                </div>
+                
+                <div class="cloze-section">
+                    <h3>活動 3: 電磁気学 / Activity 3: Electricity & Magnetism</h3>
+                    <div class="cloze-text">
+                        A <span class="blank" onclick="revealBlank(this)" data-answer="coil">______</span> of wire carries current in a closed 
+                        <span class="blank" onclick="revealBlank(this)" data-answer="circuit">______</span>. The moving charges 
+                        <span class="blank" onclick="revealBlank(this)" data-answer="generate">______</span> a magnetic field.<br>
+                        <span style="color: #666;">導線の<span class="blank" onclick="revealBlank(this)" data-answer="コイル">______</span>が閉じた
+                        <span class="blank" onclick="revealBlank(this)" data-answer="回路">______</span>に電流を流す。動く電荷が磁場を
+                        <span class="blank" onclick="revealBlank(this)" data-answer="生成する">______</span>。</span>
+                    </div>
+                    <button onclick="revealAllBlanks()">すべて表示 / Reveal All</button>
+                    <button onclick="resetBlanks()">リセット / Reset</button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- QUESTIONS TAB -->
+        <div id="questions" class="tab-content">
+            <div class="stage">
+                <h2>❓ 10問の問題 / 10 Questions</h2>
+                
+                <div class="question-box">
+                    <h3>問題 1 / Question 1: Which term correctly describes a wire wound in a spiral?<br>
+                    <span style="font-size: 0.9em; color: #555;">らせん状に巻かれた導線を正しく表す用語は？</span></h3>
+                    <div class="mcq-option" onclick="checkAnswer(1, 'A', this)">A) Circuit / 回路</div>
+                    <div class="mcq-option" onclick="checkAnswer(1, 'B', this)">B) Coil / コイル</div>
+                    <div class="mcq-option" onclick="checkAnswer(1, 'C', this)">C) Vessel / 容器</div>
+                    <div class="mcq-option" onclick="checkAnswer(1, 'D', this)">D) Medium / 媒質</div>
+                    <div id="feedback-1" class="feedback"></div>
+                </div>
+                
+                <div class="question-box">
+                    <h3>問題 2 / Question 2: What word means "to change from one form to another"?<br>
+                    <span style="font-size: 0.9em; color: #555;">「ある形から別の形に変わる」を意味する語は？</span></h3>
+                    <div class="mcq-option" onclick="checkAnswer(2, 'A', this)">A) Translate / 並進する</div>
+                    <div class="mcq-option" onclick="checkAnswer(2, 'B', this)">B) Generate / 発生する</div>
+                    <div class="mcq-option" onclick="checkAnswer(2, 'C', this)">C) Transform / 変換する</div>
+                    <div class="mcq-option" onclick="checkAnswer(2, 'D', this)">D) Propagate / 伝播する</div>
+                    <div id="feedback-2" class="feedback"></div>
+                </div>
+                
+                <div class="question-box">
+                    <h3>問題 3 / Question 3: Which adjective describes something that cannot deform?<br>
+                    <span style="font-size: 0.9em; color: #555;">変形できないものを表す形容詞は？</span></h3>
+                    <div class="mcq-option" onclick="checkAnswer(3, 'A', this)">A) Elastic / 弾性の</div>
+                    <div class="mcq-option" onclick="checkAnswer(3, 'B', this)">B) Flexible / 柔軟な</div>
+                    <div class="mcq-option" onclick="checkAnswer(3, 'C', this)">C) Rigid / 剛体の</div>
+                    <div class="mcq-option" onclick="checkAnswer(3, 'D', this)">D) Viscous / 粘性の</div>
+                    <div id="feedback-3" class="feedback"></div>
+                </div>
+                
+                <div class="question-box">
+                    <h3>問題 4 / Question 4: The boundary between two different materials is called:<br>
+                    <span style="font-size: 0.9em; color: #555;">二つの異なる材料の境界を何と呼ぶか？</span></h3>
+                    <div class="mcq-option" onclick="checkAnswer(4, 'A', this)">A) Medium / 媒質</div>
+                    <div class="mcq-option" onclick="checkAnswer(4, 'B', this)">B) Interface / 界面</div>
+                    <div class="mcq-option" onclick="checkAnswer(4, 'C', this)">C) Surface / 表面</div>
+                    <div class="mcq-option" onclick="checkAnswer(4, 'D', this)">D) Body / 物体</div>
+                    <div id="feedback-4" class="feedback"></div>
+                </div>
+                
+                <div class="question-box">
+                    <h3>問題 5 / Question 5: Which verb means "to come together with force"?<br>
+                    <span style="font-size: 0.9em; color: #555;">「力を持って一緒になる」を意味する動詞は？</span></h3>
+                    <div class="mcq-option" onclick="checkAnswer(5, 'A', this)">A) Strike / 打つ</div>
+                    <div class="mcq-option" onclick="checkAnswer(5, 'B', this)">B) Collide / 衝突する</div>
+                    <div class="mcq-option" onclick="checkAnswer(5, 'C', this)">C) Accelerate / 加速する</div>
+                    <div class="mcq-option" onclick="checkAnswer(5, 'D', this)">D) Generate / 発生する</div>
+                    <div id="feedback-5" class="feedback"></div>
+                </div>
+                
+                <div class="question-box">
+                    <h3>問題 6 / Question 6: A container designed to hold fluids is called a:<br>
+                    <span style="font-size: 0.9em; color: #555;">流体を保持するように設計された容器を何と呼ぶか？</span></h3>
+                    <div class="mcq-option" onclick="checkAnswer(6, 'A', this)">A) Block / ブロック</div>
+                    <div class="mcq-option" onclick="checkAnswer(6, 'B', this)">B) Cylinder / 円柱</div>
+                    <div class="mcq-option" onclick="checkAnswer(6, 'C', this)">C) Vessel / 容器</div>
+                    <div class="mcq-option" onclick="checkAnswer(6, 'D', this)">D) Circuit / 回路</div>
+                    <div id="feedback-6" class="feedback"></div>
+                </div>
+                
+                <div class="question-box">
+                    <h3>問題 7 / Question 7: Which word describes friction that prevents motion?<br>
+                    <span style="font-size: 0.9em; color: #555;">運動を防ぐ摩擦を表す語は？</span></h3>
+                    <div class="mcq-option" onclick="checkAnswer(7, 'A', this)">A) Kinetic / 動摩擦</div>
+                    <div class="mcq-option" onclick="checkAnswer(7, 'B', this)">B) Static / 静止摩擦</div>
+                    <div class="mcq-option" onclick="checkAnswer(7, 'C', this)">C) Dynamic / 動的</div>
+                    <div class="mcq-option" onclick="checkAnswer(7, 'D', this)">D) Uniform / 一様</div>
+                    <div id="feedback-7" class="feedback"></div>
+                </div>
+                
+                <div class="question-box">
+                    <h3>問題 8 / Question 8: What includes BOTH liquids AND gases?<br>
+                    <span style="font-size: 0.9em; color: #555;">液体と気体の両方を含むものは？</span></h3>
+                    <div class="mcq-option" onclick="checkAnswer(8, 'A', this)">A) Solids / 固体</div>
+                    <div class="mcq-option" onclick="checkAnswer(8, 'B', this)">B) Fluids / 流体</div>
+                    <div class="mcq-option" onclick="checkAnswer(8, 'C', this)">C) Bodies / 物体</div>
+                    <div class="mcq-option" onclick="checkAnswer(8, 'D', this)">D) Media / 媒質</div>
+                    <div id="feedback-8" class="feedback"></div>
+                </div>
+                
+                <div class="question-box">
+                    <h3>問題 9 / Question 9: To move in a straight line without rotation is to:<br>
+                    <span style="font-size: 0.9em; color: #555;">回転せずに直線的に動くことは？</span></h3>
+                    <div class="mcq-option" onclick="checkAnswer(9, 'A', this)">A) Rotate / 回転する</div>
+                    <div class="mcq-option" onclick="checkAnswer(9, 'B', this)">B) Translate / 並進する</div>
+                    <div class="mcq-option" onclick="checkAnswer(9, 'C', this)">C) Oscillate / 振動する</div>
+                    <div class="mcq-option" onclick="checkAnswer(9, 'D', this)">D) Accelerate / 加速する</div>
+                    <div id="feedback-9" class="feedback"></div>
+                </div>
+                
+                <div class="question-box">
+                    <h3>問題 10 / Question 10: A collision where objects stick together is:<br>
+                    <span style="font-size: 0.9em; color: #555;">物体がくっつく衝突は？</span></h3>
+                    <div class="mcq-option" onclick="checkAnswer(10, 'A', this)">A) Elastic / 弾性衝突</div>
+                    <div class="mcq-option" onclick="checkAnswer(10, 'B', this)">B) Perfectly inelastic / 完全非弾性衝突</div>
+                    <div class="mcq-option" onclick="checkAnswer(10, 'C', this)">C) Rigid / 剛体</div>
+                    <div class="mcq-option" onclick="checkAnswer(10, 'D', this)">D) Static / 静的</div>
+                    <div id="feedback-10" class="feedback"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function showTab(name) {
+            document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+            document.getElementById(name).classList.add('active');
+            event.target.classList.add('active');
+        }
+        
+        // Cloze activities
+        function revealBlank(element) {
+            if (element.classList.contains('revealed')) return;
+            element.textContent = element.dataset.answer;
+            element.classList.add('revealed');
+        }
+        
+        function revealAllBlanks() {
+            document.querySelectorAll('.blank:not(.revealed)').forEach(blank => {
+                blank.textContent = blank.dataset.answer;
+                blank.classList.add('revealed');
+            });
+        }
+        
+        function resetBlanks() {
+            document.querySelectorAll('.blank').forEach(blank => {
+                blank.classList.remove('revealed');
+                const answer = blank.dataset.answer;
+                blank.textContent = '_'.repeat(Math.min(answer.length, 12));
+            });
+        }
+        
+        // MCQ
+        const answers = {
+            1: 'B',  // Coil
+            2: 'C',  // Transform
+            3: 'C',  // Rigid
+            4: 'B',  // Interface
+            5: 'B',  // Collide
+            6: 'C',  // Vessel
+            7: 'B',  // Static
+            8: 'B',  // Fluids
+            9: 'B',  // Translate
+            10: 'B'  // Perfectly inelastic
+        };
+        
+        function checkAnswer(qNum, choice, element) {
+            const correct = answers[qNum] === choice;
+            const feedback = document.getElementById(`feedback-${qNum}`);
+            
+            // Remove previous selections
+            element.parentElement.querySelectorAll('.mcq-option').forEach(opt => {
+                opt.classList.remove('selected', 'correct', 'incorrect');
+            });
+            
+            element.classList.add('selected');
+            
+            if (correct) {
+                element.classList.add('correct');
+                if (!element.textContent.includes('✓')) {
+                    element.textContent = element.textContent + ' ✓';
+                }
+                feedback.className = 'feedback correct';
+                feedback.textContent = '✓ 正解！ / Correct!';
+                feedback.style.display = 'block';
+            } else {
+                element.classList.add('incorrect');
+                feedback.className = 'feedback incorrect';
+                feedback.textContent = '✗ 不正解。もう一度！ / Incorrect. Try again!';
+                feedback.style.display = 'block';
+            }
+        }
+        
+        // Initialize
+        resetBlanks();
+    </script>
+</body>
+</html>
